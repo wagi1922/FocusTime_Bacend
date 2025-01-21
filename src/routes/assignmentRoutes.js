@@ -5,7 +5,8 @@ const {
   getAssignment, 
   updateAssignment, 
   deleteAssignment, 
-  submitAnswer 
+  submitAnswer,
+  getAssignmentById 
 } = require('../controllers/assignmentController');
 const authMiddleware = require('../middlewares/authMiddleware');
 const classMiddleware = require('../middlewares/classMiddleware.')
@@ -90,5 +91,17 @@ router.delete('/:assignmentId', authMiddleware, deleteAssignment);
  * @return {object} 500 - Terjadi kesalahan pada server
  */
 router.post('/:assignmentId/submit', classMiddleware, submitAnswer);
+
+
+/**
+ * GET /api/assignments/detail/{assignmentId}
+ * @summary Mendapatkan detail tugas berdasarkan ID
+ * @tags Assignments
+ * @param {string} assignmentId.path.required - ID tugas
+ * @return {AssignmentResponse} 200 - Detail bahan pelajaran
+ * @return {object} 404 - Bahan pelajaran tidak ditemukan
+ * @return {object} 500 - Terjadi kesalahan pada server
+ */
+router.get('/detail/:assignmentId', getAssignmentById);
 
 module.exports = router;

@@ -122,7 +122,7 @@ class ClassController {
   // Keluar dari kelas
   async leaveClass(req, res) {
     const { classId } = req.params;
-    const userId = req.user._id;
+    const userId = req.user.userId;
 
     try {
       const classData = await Class.findById(classId);
@@ -194,13 +194,14 @@ class ClassController {
   // Melihat daftar kelas yang diikuti oleh siswa
   async getJoinedClasses(req, res) {
     const studentId = req.user.userId;
-
+  
     try {
-      const classes = await Class.find({ students: studentId });
-      if (!classes.length) {
+      // Query untuk mencari kelas yang berisi `studentId` di dalam array `students`
+      const classes = await Class.find({ students: studentId }).populate('students', 'name email');
+      if (!classes || classes.length === 0) {
         return res.status(404).json({ message: 'No joined classes found' });
       }
-
+  
       res.status(200).json({
         message: 'Joined classes retrieved successfully',
         data: classes,
@@ -209,6 +210,25 @@ class ClassController {
       res.status(500).json({ message: 'Server error', error: error.message });
     }
   }
+
+  async viewClassDetails(req, res) {
+    const { classId } = req.params;
+    
+    try {
+      const classData = await Class.findById(classId).populate('teacherId', 'name email');  // Populate nama dan email dari guru
+      if (!classData) {
+        return res.status(404).json({ message: 'Class not found' });
+      }
+      
+      res.status(200).json({
+        message: 'Class details retrieved successfully',
+        data: classData,
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error', error: error.message });
+    }
+  }
+  
 }
 
 

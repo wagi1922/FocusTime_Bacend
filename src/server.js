@@ -4,7 +4,6 @@ const authRoutes = require('./routes/authRoutes');
 const classRoutes = require('./routes/classRoutes');
 const assignmentRoutes = require('./routes/assignmentRoutes');
 const materialRoutes = require('./routes/materialRoutes');
-const achievementRoutes = require('./routes/achievementRoutes');
 const setupSwagger = require('./swagger');
 const cors = require('cors');
 require('dotenv').config();
@@ -26,7 +25,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/classes', classRoutes);
 app.use('/api/assignments', assignmentRoutes);
 app.use('/api/materials', materialRoutes);
-app.use('/api/achievements', achievementRoutes);
 
 setupSwagger(app);
 

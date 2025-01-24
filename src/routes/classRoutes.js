@@ -9,7 +9,6 @@ const {
   getClassMembers,
   getClassesByTeacher,
   getJoinedClasses,
-  viewClassDetails,
 } = require('../controllers/classController');
 const authMiddleware = require('../middlewares/authMiddleware');
 const classMiddleware = require('../middlewares/classMiddleware.')
@@ -144,17 +143,5 @@ router.post('/:classId/leave', classMiddleware, leaveClass);
  * @return {object} 500 - Terjadi kesalahan pada server
  */
 router.get('/:classId/members', authMiddleware, getClassMembers);
-
-/**
- * GET /api/classes/{classId}/details
- * @summary Melihat detail kelas berdasarkan ID kelas
- * @tags Class
- * @param {string} classId.path.required - ID kelas
- * @return {ClassResponse} 200 - Detail kelas berhasil ditemukan
- * @return {object} 404 - Kelas tidak ditemukan
- * @return {object} 500 - Terjadi kesalahan pada server
- */
-router.get('/:classId/details', classMiddleware, viewClassDetails);
-
 
 module.exports = router;

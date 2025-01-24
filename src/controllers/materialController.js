@@ -28,25 +28,9 @@ exports.addMaterial = async (req, res) => {
 exports.getMaterials = async (req, res) => {
   try {
     const materials = await Material.find({ classId: req.params.classId });
-    res.status(200).json(materials); // Menyertakan link dokumen di respons
+    res.status(200).json({data : materials});
   } catch (err) {
     res.status(500).json({ message: err.message });
-  }
-};
-
-// Ambil bahan pelajaran berdasarkan ID
-exports.getMaterialById = async (req, res) => {
-  const { materialId } = req.params;
-
-  try {
-    const material = await Material.findById(materialId);
-    if (!material) {
-      return res.status(404).json({ message: 'Material not found' });
-    }
-
-    res.status(200).json(material);
-  } catch (err) {
-    res.status(500).json({ message: 'Error fetching material', details: err.message });
   }
 };
 

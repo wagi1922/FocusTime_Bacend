@@ -53,16 +53,6 @@ router.post('/:classId/create', authMiddleware, addMaterial);
  */
 router.get('/:classId', getMaterials);
 
-/**
- * GET /api/materials/detail/{materialId}
- * @summary Mendapatkan detail bahan pelajaran berdasarkan ID
- * @tags Materials
- * @param {string} materialId.path.required - ID bahan pelajaran
- * @return {MaterialResponse} 200 - Detail bahan pelajaran
- * @return {object} 404 - Bahan pelajaran tidak ditemukan
- * @return {object} 500 - Terjadi kesalahan pada server
- */
-router.get('/detail/:materialId', getMaterialById);
 
 /**
  * PUT /api/materials/{materialId}

@@ -36,7 +36,7 @@ class ClassController {
       if (!classData) {
         return res.status(404).json({ message: 'Class not found' });
       }
-      res.status(200).json({ classId: classData._id, code: classData.code });
+      res.status(200).json({code: classData.code });
     } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });
     }
@@ -169,21 +169,18 @@ class ClassController {
   // Melihat daftar kelas yang dibuat oleh guru
   async getClassesByTeacher(req, res) {
     try {
-      // Validasi apakah `req.user` ada dan memiliki `userId`
       const teacherId = req.user?.userId;
       if (!teacherId) {
         return res.status(400).json({ message: 'Invalid user ID or user not authenticated' });
       }
 
-      // Cari semua kelas yang dibuat oleh guru dan populate `teacherId` untuk mendapatkan nama guru
+      
       const classes = await Class.find({ teacherId }).populate('teacherId', 'username');
 
-      // Jika tidak ada kelas ditemukan
       if (!classes || classes.length === 0) {
         return res.status(404).json({ message: 'No classes found for this teacher' });
       }
 
-      // Menyusun data dengan teacherName
       const response = classes.map(cls => ({
         id: cls._id,
         name: cls.name,
@@ -191,13 +188,11 @@ class ClassController {
         students: cls.students.length,
       }));
 
-      // Berhasil mendapatkan daftar kelas
       res.status(200).json({
         message: 'Classes retrieved successfully',
         data: response,
       });
     } catch (error) {
-      // Menangani error server
       res.status(500).json({ message: 'Server error', error: error.message });
     }
   }
@@ -209,54 +204,28 @@ class ClassController {
       const studentId = req.user.userId;
     
       try {
-        // Query untuk mencari kelas yang diikuti siswa, populate `teacherId` untuk nama guru, dan `students` untuk menghitung jumlah siswa
         const classes = await Class.find({ students: studentId })
-          .populate('teacherId', 'username') // Ambil nama guru dari `User`
-          .populate('students', '_id'); // Ambil ID siswa untuk menghitung jumlah
+          .populate('teacherId', 'username') 
+          .populate('students', '_id'); 
     
-        // Jika tidak ada kelas ditemukan
         if (!classes || classes.length === 0) {
           return res.status(404).json({ message: 'No joined classes found' });
         }
     
-        // Menyusun data dengan `teacherName` dan jumlah siswa
         const response = classes.map(cls => ({
           id: cls._id,
           name: cls.name,
           teacherName: cls.teacherId.username,
           students: cls.students.length,
         }));
-    
-        // Berhasil mendapatkan daftar kelas
         res.status(200).json({
           message: 'Joined classes retrieved successfully',
           data: response,
         });
       } catch (error) {
-        // Menangani error server
         res.status(500).json({ message: 'Server error', error: error.message });
       }
     }
-    
-
-  async viewClassDetails(req, res) {
-    const { classId } = req.params;
-    
-    try {
-      const classData = await Class.findById(classId).populate('teacherId', 'name email');  // Populate nama dan email dari guru
-      if (!classData) {
-        return res.status(404).json({ message: 'Class not found' });
-      }
-      
-      res.status(200).json({
-        message: 'Class details retrieved successfully',
-        data: classData,
-      });
-    } catch (error) {
-      res.status(500).json({ message: 'Server error', error: error.message });
-    }
-  }
-  
 }
 
 
